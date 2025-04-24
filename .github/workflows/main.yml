@@ -3,9 +3,8 @@ name: Run FetchUsers Daily at 9:00 PM Pakistan Time (Mon-Fri)
 on:
   schedule:
     - cron: '0 16 * * 1-5'  # Runs at 9:00 PM Pakistan Time (16:00 UTC) on Monday to Friday
-
   workflow_dispatch:  # Allows manual triggering
- 
+
 jobs:
   run-fetch-users:
     runs-on: ubuntu-latest
@@ -22,60 +21,13 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Load Environment Variables from .env
+        run: |
+          echo "SUPABASE_URL=$(grep 'VITE_SUPABASE_URL' .env | cut -d '=' -f2)" >> $GITHUB_ENV
+          echo "SUPABASE_ANON_KEY=$(grep 'VITE_SUPABASE_ANON_KEY' .env | cut -d '=' -f2)" >> $GITHUB_ENV
+
       - name: Run FetchUsers Script
         run: node fetchUsers.js
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# name: Run FetchUsers Daily at 9:00 PM Pakistan Time (Mon-Fri)
-
-# on:
-#   schedule:
-#     - cron: '0 16 * * 1-5'  # Runs at 9:00 PM Pakistan Time (16:00 UTC) on Monday to Friday
-
-#   workflow_dispatch:  # Allows manual triggering
-
-# jobs:
-#   run-fetch-users:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v4
-
-#       - name: Set Up Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 18
-
-#       - name: Install Dependencies
-#         run: npm install
-
-#       - name: Load Environment Variables from .env
-#         run: |
-#           echo "SUPABASE_URL=$(grep 'VITE_SUPABASE_URL' .env | cut -d '=' -f2)" >> $GITHUB_ENV
-#           echo "SUPABASE_ANON_KEY=$(grep 'VITE_SUPABASE_ANON_KEY' .env | cut -d '=' -f2)" >> $GITHUB_ENV
-
-#       - name: Run FetchUsers Script
-#         run: node fetchUsers.js
-#         env:
-#           SUPABASE_URL: ${{ env.SUPABASE_URL }}
-#           SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ env.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ env.SUPABASE_ANON_KEY }}
